@@ -427,14 +427,14 @@
 
             <!-- Global Team Message -->
             <div id="team-message-banner"
-                class="hidden mb-6 bg-cyan-500/10 border border-cyan-500/20 rounded-xl overflow-hidden relative">
+                class="hidden mb-6 bg-cyan-500/10 border border-cyan-500/20 rounded-xl overflow-hidden relative" style="min-height:64px">
                 <div
-                    class="absolute inset-y-0 left-0 bg-cyan-900/50 w-12 flex items-center justify-center z-10 border-r border-cyan-500/20">
-                    <i class="fas fa-bullhorn text-cyan-400"></i>
+                    class="absolute inset-y-0 left-0 bg-cyan-900/50 w-14 flex items-center justify-center z-10 border-r border-cyan-500/20">
+                    <i class="fas fa-bullhorn text-cyan-400 text-lg"></i>
                 </div>
-                <div class="overflow-hidden flex items-center h-10 ml-12">
-                    <div class="whitespace-nowrap px-4 text-sm text-cyan-100 font-medium tracking-wide flex items-center gap-12"
-                        style="animation: scrollBanner 40s linear infinite;">
+                <div class="overflow-hidden flex items-center h-16 ml-12">
+                    <div class="whitespace-nowrap px-6 text-base text-cyan-100 font-semibold tracking-wide flex items-center gap-16"
+                        style="animation: scrollBanner 90s linear infinite;">
                         <span id="global-message-text" class="italic">Chargement des informations...</span>
                         <span id="global-message-text-clone" class="italic" aria-hidden="true">Chargement des
                             informations...</span>
@@ -795,6 +795,95 @@
         </div>
     </div>
 
+    <!-- Edit Alert Modal -->
+    <div id="edit-alert-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeEditModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="glass-card bg-gray-900 w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar p-6 border-2 border-cyan-500/30">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-cyan-400"><i class="fas fa-pen mr-2"></i>Modifier le signalement</h2>
+                    <button onclick="closeEditModal()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <form id="edit-alert-form" onsubmit="submitEditAlert(event)" class="space-y-4">
+                    <input type="hidden" id="edit-alert-id">
+
+                    <div class="space-y-2">
+                        <label class="block text-sm mb-1 text-gray-400">Type(s) de problème <span class="text-xs text-cyan-500">* (Sélection multiple)</span></label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="missing" class="w-4 h-4 accent-cyan-500" id="edit-type-missing">
+                                <span class="text-sm">Produit manquant</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="outofstock" class="w-4 h-4 accent-cyan-500" id="edit-type-outofstock">
+                                <span class="text-sm">Stock épuisé</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="expired" class="w-4 h-4 accent-cyan-500" id="edit-type-expired">
+                                <span class="text-sm">Produit périmé</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="damaged" class="w-4 h-4 accent-cyan-500" id="edit-type-damaged">
+                                <span class="text-sm">Matériel endommagé</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors col-span-2">
+                                <input type="checkbox" name="type" value="other" class="w-4 h-4 accent-cyan-500" id="edit-type-other">
+                                <span class="text-sm">Autre problème</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="text" id="edit-product-name" name="productName" placeholder="Nom du produit" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500">
+
+                    <input type="text" id="edit-reference" name="reference" placeholder="Référence (optionnel)"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500">
+
+                    <div>
+                        <label class="block text-sm mb-1 text-gray-400">Date de péremption (optionnel)</label>
+                        <input type="date" id="edit-expiration" name="expirationDate"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-gray-300 focus:outline-none focus:border-cyan-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm mb-1">Urgence</label>
+                        <div class="flex gap-3" id="edit-urgency-group">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="urgency" value="low" class="hidden peer" id="edit-urgency-low">
+                                <div class="p-2 border border-white/10 bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10 text-center text-sm rounded-lg">Basse</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="urgency" value="medium" class="hidden peer" id="edit-urgency-medium">
+                                <div class="p-2 border border-white/10 bg-white/5 peer-checked:border-yellow-500 peer-checked:bg-yellow-500/10 text-center text-sm rounded-lg">Moyenne</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="urgency" value="high" class="hidden peer" id="edit-urgency-high">
+                                <div class="p-2 border border-white/10 bg-white/5 peer-checked:border-red-500 peer-checked:bg-red-500/10 text-center text-sm rounded-lg">Haute</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <textarea id="edit-notes" name="notes" placeholder="Description..." rows="3"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 resize-none focus:outline-none focus:border-cyan-500"></textarea>
+
+                    <div class="flex gap-3">
+                        <button type="button" onclick="closeEditModal()"
+                            class="flex-1 bg-white/5 hover:bg-white/10 rounded-xl py-3 transition-colors">
+                            Annuler
+                        </button>
+                        <button type="submit"
+                            class="flex-1 bg-gradient-to-r from-cyan-600 to-violet-600 text-white rounded-xl py-3 hover:from-cyan-500 hover:to-violet-500 transition-colors">
+                            <i class="fas fa-save mr-2"></i>Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -858,6 +947,14 @@
         // Expose Firebase functions to window for regular scripts
         window.setFirebaseDoc = setDoc;
         window.firebaseDoc = doc;
+        window.addDoc = addDoc;
+        window.dbCollection = collection;
+        window.getDocs = getDocs;
+        window.dbQuery = query;
+        window.dbOrderBy = orderBy;
+        window.dbWhere = where;
+        window.dbDeleteDoc = deleteDoc;
+        window.dbDoc = doc;
 
         // Listen for settings (Owner Message)
         onSnapshot(doc(db, "settings", "general"), (docSnap) => {
@@ -879,6 +976,33 @@
                 }
             }
         });
+
+        // *** REAL-TIME NOTIFICATIONS via Firebase ***
+        // Listen to notifications collection: ordered by date desc
+        const notifQuery = query(collection(db, "notifications"), orderBy("date", "desc"));
+        onSnapshot(notifQuery, (snapshot) => {
+            window.firebaseNotifications = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (window.updateNotificationBadge) window.updateNotificationBadge();
+            // If center is open, refresh it
+            const center = document.getElementById('notification-center');
+            if (center && !center.classList.contains('hidden') && window.renderNotifications) {
+                window.renderNotifications();
+            }
+        });
+
+        // *** addNotification defined HERE inside module — db, addDoc, collection are guaranteed available ***
+        window.addNotification = async function (title, message, type) {
+            try {
+                await addDoc(collection(db, "notifications"), {
+                    title,
+                    message,
+                    type,
+                    date: new Date().toISOString()
+                });
+            } catch (err) {
+                console.error('Erreur notification Firebase:', err);
+            }
+        };
 
         // Sync Status Checks
         window.updateSyncStatus = function (online) {
@@ -1025,14 +1149,28 @@
                                         <span class="px-2 py-0.5 rounded-full text-xs font-medium ${getUrgencyStyle(alert.urgency)}">
                                             ${getUrgencyLabel(alert.urgency)}
                                         </span>
-                                        ${alert.status === 'resolved' ? '<span class="px-2 py-0.5 rounded-full text-xs bg-emerald-500/20 text-emerald-400">Résolu</span>' : ''}
+                                        ${alert.status === 'resolved' ? '<span class="px-2 py-0.5 rounded-full text-xs bg-emerald-500/20 text-emerald-400"><i class="fas fa-check-circle mr-1"></i>Résolu</span>' : ''}
                                     </div>
                                     <p class="text-sm text-gray-400 flex items-center flex-wrap gap-2">
-                                        <span><i class="fas fa-user-circle mr-1"></i>${alert.reportedBy.firstName} ${alert.reportedBy.lastName}</span>
+                                        <span><i class="fas fa-user-circle mr-1"></i>Signalé par : ${alert.reportedBy.firstName} ${alert.reportedBy.lastName}</span>
                                         ${alert.reportedBy.role ? `<span class="px-2 py-0.5 rounded text-[10px] bg-white/10 text-gray-300 border border-white/5 uppercase tracking-wider">${alert.reportedBy.role.replace('_', ' ')}</span>` : ''}
                                         <span class="text-gray-600">•</span>
                                         <span><i class="fas fa-clock mr-1"></i>${formatDate(alert.date)}</span>
                                     </p>
+                                    ${alert.lastModifiedBy ? `
+                                    <p class="text-xs text-violet-300/70 flex items-center gap-1 mt-1">
+                                        <i class="fas fa-pen text-violet-400"></i>
+                                        <span>Modifié par : <strong>${alert.lastModifiedBy.firstName} ${alert.lastModifiedBy.lastName}</strong></span>
+                                        ${alert.lastModifiedBy.role ? `<span class="px-1.5 py-0.5 rounded text-[9px] bg-violet-500/10 text-violet-300 border border-violet-500/20 uppercase tracking-wider">${alert.lastModifiedBy.role.replace('_', ' ')}</span>` : ''}
+                                        <span class="text-gray-500">le ${formatDate(alert.lastModifiedAt)}</span>
+                                    </p>` : ''}
+                                    ${alert.resolvedBy ? `
+                                    <p class="text-xs text-emerald-300/70 flex items-center gap-1 mt-1">
+                                        <i class="fas fa-check-circle text-emerald-400"></i>
+                                        <span>Résolu par : <strong>${alert.resolvedBy.firstName} ${alert.resolvedBy.lastName}</strong></span>
+                                        ${alert.resolvedBy.role ? `<span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 uppercase tracking-wider">${alert.resolvedBy.role.replace('_', ' ')}</span>` : ''}
+                                        <span class="text-gray-500">le ${formatDate(alert.resolvedAt)}</span>
+                                    </p>` : ''}
                                     ${alert.expirationDate ? `<p class="text-sm mt-2"><span class="text-yellow-400 bg-yellow-400/10 px-2 py-0.5 rounded text-xs font-medium"><i class="fas fa-calendar-times mr-1"></i>Péremption: ${alert.expirationDate}</span></p>` : ''}
                                     ${alert.notes ? `
                                     <div class="mt-4 p-3 bg-cyan-500/10 border-l-2 border-cyan-500 rounded-r-xl">
@@ -1052,7 +1190,16 @@
                                     <i class="fas fa-check"></i>
                                     <span class="hidden md:inline ml-2">Résoudre</span>
                                 </button>
-                            ` : ''}
+                            ` : `
+                                <button onclick="unresolveAlert('${alert.id}')" class="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 px-4 py-2 rounded-xl text-sm">
+                                    <i class="fas fa-undo"></i>
+                                    <span class="hidden md:inline ml-2">Annuler résolu</span>
+                                </button>
+                            `}
+                            <button onclick="openEditModal('${alert.id}')" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 px-4 py-2 rounded-xl text-sm">
+                                <i class="fas fa-pen"></i>
+                                <span class="hidden md:inline ml-2">Modifier</span>
+                            </button>
                             ${currentUser?.isOwner || currentUser?.id === alert.reportedBy.id ? `
                                 <button onclick="deleteAlert('${alert.id}')" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-xl text-sm">
                                     <i class="fas fa-trash"></i>
@@ -1112,7 +1259,103 @@
             document.getElementById('stat-resolved').textContent = resolved;
         };
 
-        window.resolveAlert = async function (id) { await window.updateAlertInFirestore(id, { status: 'resolved' }); showToast('Signalement résolu'); };
+        window.resolveAlert = async function (id) {
+            await window.updateAlertInFirestore(id, {
+                status: 'resolved',
+                resolvedBy: {
+                    id: currentUser.id,
+                    firstName: currentUser.firstName,
+                    lastName: currentUser.lastName,
+                    role: currentUser.role || 'Utilisateur'
+                },
+                resolvedAt: new Date().toISOString()
+            });
+            showToast('Signalement résolu');
+            const alert = window.alerts.find(a => a.id === id);
+            if (alert) {
+                addNotification('Signalement résolu', `${currentUser.firstName} ${currentUser.lastName} a résolu : ${alert.productName}`, 'resolved');
+            }
+        };
+
+        window.unresolveAlert = async function (id) {
+            if (!confirm('Annuler la résolution de ce signalement ? Il repassera en statut "En attente".')) return;
+            await window.updateAlertInFirestore(id, {
+                status: 'pending',
+                resolvedBy: null,
+                resolvedAt: null
+            });
+            showToast('Résolution annulée — signalement remis en attente');
+            const alert = window.alerts.find(a => a.id === id);
+            if (alert) {
+                addNotification('Résolution annulée', `${currentUser.firstName} ${currentUser.lastName} a annulé la résolution de : ${alert.productName}`, 'unresolved');
+            }
+        };
+
+        window.openEditModal = function (id) {
+            const alert = window.alerts.find(a => a.id === id);
+            if (!alert) return;
+
+            document.getElementById('edit-alert-id').value = id;
+            document.getElementById('edit-product-name').value = alert.productName || '';
+            document.getElementById('edit-reference').value = alert.reference || '';
+            document.getElementById('edit-expiration').value = alert.expirationDate || '';
+            document.getElementById('edit-notes').value = alert.notes || '';
+
+            // Set types
+            ['missing','outofstock','expired','damaged','other'].forEach(t => {
+                const el = document.getElementById('edit-type-' + t);
+                if (el) el.checked = getTypesArray(alert.type).includes(t);
+            });
+
+            // Set urgency
+            const urgency = alert.urgency || 'medium';
+            const urgencyEl = document.getElementById('edit-urgency-' + urgency);
+            if (urgencyEl) urgencyEl.checked = true;
+
+            document.getElementById('edit-alert-modal').classList.remove('hidden');
+        };
+
+        window.closeEditModal = function () {
+            document.getElementById('edit-alert-modal').classList.add('hidden');
+        };
+
+        window.submitEditAlert = async function (e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const id = document.getElementById('edit-alert-id').value;
+
+            const selectedTypes = formData.getAll('type');
+            if (selectedTypes.length === 0) {
+                showToast('Veuillez sélectionner au moins un type.', true);
+                return;
+            }
+
+            const updates = {
+                type: selectedTypes,
+                productName: formData.get('productName'),
+                reference: formData.get('reference') || '',
+                expirationDate: formData.get('expirationDate') || '',
+                urgency: formData.get('urgency') || 'medium',
+                notes: formData.get('notes') || '',
+                lastModifiedBy: {
+                    id: currentUser.id,
+                    firstName: currentUser.firstName,
+                    lastName: currentUser.lastName,
+                    role: currentUser.role || 'Utilisateur'
+                },
+                lastModifiedAt: new Date().toISOString()
+            };
+
+            try {
+                await window.updateAlertInFirestore(id, updates);
+                showToast('Signalement modifié avec succès');
+                closeEditModal();
+                addNotification('Signalement modifié', `${currentUser.firstName} ${currentUser.lastName} a modifié : ${updates.productName}`, 'edited');
+            } catch (error) {
+                showToast('Erreur: ' + error.message, true);
+            }
+        };
+
         window.deleteAlert = async function (id) { if (confirm('Supprimer ce signalement ?')) { await window.deleteAlertFromFirestore(id); showToast('Signalement supprimé'); } };
 
         // Login Logic & App Modals...
@@ -1221,9 +1464,25 @@
                 return;
             }
 
+            const productName = formData.get('productName');
+
+            // --- Check for duplicate active alert ---
+            const existingActive = window.alerts.filter(a =>
+                a.productName.trim().toLowerCase() === productName.trim().toLowerCase() &&
+                a.status !== 'resolved'
+            );
+
+            if (existingActive.length > 0) {
+                const confirmDuplicate = confirm(
+                    `⚠️ Ce produit "${productName}" est déjà signalé et en attente de résolution.\n\nVoulez-vous le signaler à nouveau ?`
+                );
+                if (!confirmDuplicate) return;
+            }
+            // -----------------------------------------
+
             const newAlert = {
                 type: selectedTypes,
-                productName: formData.get('productName'),
+                productName: productName,
                 reference: formData.get('reference') || '',
                 expirationDate: formData.get('expirationDate') || '',
                 urgency: formData.get('urgency') || 'medium',
@@ -1242,7 +1501,8 @@
                 await window.addAlertToFirestore(newAlert);
                 showToast('Signalement créé');
                 closeAlertModal();
-                addNotification('Nouveau signalement', `${currentUser.firstName} a signalé: ${newAlert.productName}`, 'new_alert');
+                // Push notification to Firebase so ALL users are informed
+                addNotification('Nouveau signalement', `${currentUser.firstName} ${currentUser.lastName} a signalé : ${newAlert.productName}`, 'new_alert');
             } catch (error) {
                 showToast('Erreur: ' + error.message, true);
             }
@@ -1382,23 +1642,31 @@
             }
         };
 
-        // Notifications
+        // *** NOTIFICATIONS - Firebase real-time system ***
+        // firebaseNotifications is populated by onSnapshot in the module script
+        window.firebaseNotifications = window.firebaseNotifications || [];
+
         window.renderNotifications = function () {
             const list = document.getElementById('notifications-list');
-            if (notifications.length === 0) {
+            const notifs = window.firebaseNotifications || [];
+            if (notifs.length === 0) {
                 list.innerHTML = '<p class="text-center text-gray-400 py-4">Aucune notification</p>';
                 return;
             }
-            list.innerHTML = notifications.slice().reverse().map(n => `
-                <div class="p-3 bg-white/5 rounded-lg">
-                    <p class="text-sm">${n.message}</p>
+            list.innerHTML = notifs.map(n => `
+                <div class="p-3 bg-white/5 rounded-lg border-l-2 border-cyan-500/40">
+                    <p class="text-sm font-medium text-white">${n.title || 'Notification'}</p>
+                    <p class="text-sm text-gray-300 mt-0.5">${n.message}</p>
                     <p class="text-xs text-gray-500 mt-1">${formatDate(n.date)}</p>
                 </div>
             `).join('');
         };
 
         window.updateNotificationBadge = function () {
-            const unread = notifications.filter(n => !n.read).length;
+            const notifs = window.firebaseNotifications || [];
+            // Show unread count: all notifications seen since last clear stored in localStorage
+            const lastClear = parseInt(localStorage.getItem('notifLastClear') || '0');
+            const unread = notifs.filter(n => new Date(n.date).getTime() > lastClear).length;
             const badge = document.getElementById('nav-notif-badge');
             const count = document.getElementById('notif-count');
 
@@ -1413,25 +1681,17 @@
             }
         };
 
-        window.addNotification = function (title, message, type) {
-            const notif = {
-                id: Date.now(),
-                title,
-                message,
-                type,
-                date: new Date().toISOString(),
-                read: false
-            };
-            notifications.push(notif);
-            localStorage.setItem('labNotifications', JSON.stringify(notifications));
-            updateNotificationBadge();
+        window.addNotification = window.addNotification || async function (title, message, type) {
+            // Fallback: should normally be overridden by the Firebase module
+            console.warn('addNotification: Firebase module not yet ready');
         };
 
-        window.clearAllNotifications = function () {
-            notifications = [];
-            localStorage.setItem('labNotifications', JSON.stringify(notifications));
-            renderNotifications();
+        window.clearAllNotifications = async function () {
+            // Mark current time as "cleared" — don't delete from Firebase
+            // (so historical logs remain, but badge resets for this user)
+            localStorage.setItem('notifLastClear', Date.now().toString());
             updateNotificationBadge();
+            renderNotifications();
         };
 
         // Event Listeners (Modals, close dropdowns)
@@ -1450,6 +1710,7 @@
                 if (window.closeAlertModal) closeAlertModal();
                 if (window.closeAdminPanel) closeAdminPanel();
                 if (window.closeOwnerModal) closeOwnerModal();
+                if (window.closeEditModal) closeEditModal();
                 document.getElementById('notification-center')?.classList.add('hidden');
                 document.getElementById('profile-dropdown')?.classList.add('hidden');
             }
