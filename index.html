@@ -427,7 +427,8 @@
 
             <!-- Global Team Message -->
             <div id="team-message-banner"
-                class="hidden mb-6 bg-cyan-500/10 border border-cyan-500/20 rounded-xl overflow-hidden relative" style="min-height:64px">
+                class="hidden mb-6 bg-cyan-500/10 border border-cyan-500/20 rounded-xl overflow-hidden relative"
+                style="min-height:64px">
                 <div
                     class="absolute inset-y-0 left-0 bg-cyan-900/50 w-14 flex items-center justify-center z-10 border-r border-cyan-500/20">
                     <i class="fas fa-bullhorn text-cyan-400 text-lg"></i>
@@ -648,6 +649,12 @@
                         <h3 class="text-lg font-semibold mb-4">Membres de l'équipe (<span id="team-count">0</span>)</h3>
                         <div id="team-list" class="space-y-2"></div>
                     </div>
+
+                    <!-- Liste demandes en attente -->
+                    <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-amber-400">Demandes d'inscription (<span id="pending-count">0</span>)</h3>
+                        <div id="pending-list" class="space-y-2"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -799,9 +806,11 @@
     <div id="edit-alert-modal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeEditModal()"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="glass-card bg-gray-900 w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar p-6 border-2 border-cyan-500/30">
+            <div
+                class="glass-card bg-gray-900 w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar p-6 border-2 border-cyan-500/30">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-cyan-400"><i class="fas fa-pen mr-2"></i>Modifier le signalement</h2>
+                    <h2 class="text-xl font-bold text-cyan-400"><i class="fas fa-pen mr-2"></i>Modifier le signalement
+                    </h2>
                     <button onclick="closeEditModal()" class="text-gray-400 hover:text-white">
                         <i class="fas fa-times"></i>
                     </button>
@@ -811,26 +820,37 @@
                     <input type="hidden" id="edit-alert-id">
 
                     <div class="space-y-2">
-                        <label class="block text-sm mb-1 text-gray-400">Type(s) de problème <span class="text-xs text-cyan-500">* (Sélection multiple)</span></label>
+                        <label class="block text-sm mb-1 text-gray-400">Type(s) de problème <span
+                                class="text-xs text-cyan-500">* (Sélection multiple)</span></label>
                         <div class="grid grid-cols-2 gap-2">
-                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
-                                <input type="checkbox" name="type" value="missing" class="w-4 h-4 accent-cyan-500" id="edit-type-missing">
+                            <label
+                                class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="missing" class="w-4 h-4 accent-cyan-500"
+                                    id="edit-type-missing">
                                 <span class="text-sm">Produit manquant</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
-                                <input type="checkbox" name="type" value="outofstock" class="w-4 h-4 accent-cyan-500" id="edit-type-outofstock">
+                            <label
+                                class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="outofstock" class="w-4 h-4 accent-cyan-500"
+                                    id="edit-type-outofstock">
                                 <span class="text-sm">Stock épuisé</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
-                                <input type="checkbox" name="type" value="expired" class="w-4 h-4 accent-cyan-500" id="edit-type-expired">
+                            <label
+                                class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="expired" class="w-4 h-4 accent-cyan-500"
+                                    id="edit-type-expired">
                                 <span class="text-sm">Produit périmé</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
-                                <input type="checkbox" name="type" value="damaged" class="w-4 h-4 accent-cyan-500" id="edit-type-damaged">
+                            <label
+                                class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors">
+                                <input type="checkbox" name="type" value="damaged" class="w-4 h-4 accent-cyan-500"
+                                    id="edit-type-damaged">
                                 <span class="text-sm">Matériel endommagé</span>
                             </label>
-                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors col-span-2">
-                                <input type="checkbox" name="type" value="other" class="w-4 h-4 accent-cyan-500" id="edit-type-other">
+                            <label
+                                class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-white/10 transition-colors col-span-2">
+                                <input type="checkbox" name="type" value="other" class="w-4 h-4 accent-cyan-500"
+                                    id="edit-type-other">
                                 <span class="text-sm">Autre problème</span>
                             </label>
                         </div>
@@ -852,16 +872,25 @@
                         <label class="block text-sm mb-1">Urgence</label>
                         <div class="flex gap-3" id="edit-urgency-group">
                             <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="urgency" value="low" class="hidden peer" id="edit-urgency-low">
-                                <div class="p-2 border border-white/10 bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10 text-center text-sm rounded-lg">Basse</div>
+                                <input type="radio" name="urgency" value="low" class="hidden peer"
+                                    id="edit-urgency-low">
+                                <div
+                                    class="p-2 border border-white/10 bg-white/5 peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10 text-center text-sm rounded-lg">
+                                    Basse</div>
                             </label>
                             <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="urgency" value="medium" class="hidden peer" id="edit-urgency-medium">
-                                <div class="p-2 border border-white/10 bg-white/5 peer-checked:border-yellow-500 peer-checked:bg-yellow-500/10 text-center text-sm rounded-lg">Moyenne</div>
+                                <input type="radio" name="urgency" value="medium" class="hidden peer"
+                                    id="edit-urgency-medium">
+                                <div
+                                    class="p-2 border border-white/10 bg-white/5 peer-checked:border-yellow-500 peer-checked:bg-yellow-500/10 text-center text-sm rounded-lg">
+                                    Moyenne</div>
                             </label>
                             <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="urgency" value="high" class="hidden peer" id="edit-urgency-high">
-                                <div class="p-2 border border-white/10 bg-white/5 peer-checked:border-red-500 peer-checked:bg-red-500/10 text-center text-sm rounded-lg">Haute</div>
+                                <input type="radio" name="urgency" value="high" class="hidden peer"
+                                    id="edit-urgency-high">
+                                <div
+                                    class="p-2 border border-white/10 bg-white/5 peer-checked:border-red-500 peer-checked:bg-red-500/10 text-center text-sm rounded-lg">
+                                    Haute</div>
                             </label>
                         </div>
                     </div>
@@ -1081,6 +1110,7 @@
         function getIconForType(type) { const t = getTypesArray(type)[0]; return t === 'missing' ? 'box-open' : t === 'outofstock' ? 'times-circle' : t === 'expired' ? 'calendar-times' : t === 'damaged' ? 'tools' : 'question-circle'; }
         function getUrgencyStyle(u) { const styles = { low: 'bg-emerald-500/20 text-emerald-400', medium: 'bg-yellow-500/20 text-yellow-400', high: 'bg-red-500/20 text-red-400' }; return styles[u] || 'bg-gray-500/20'; }
         function getUrgencyLabel(u) { const labels = { low: 'Basse', medium: 'Moyenne', high: 'Haute' }; return labels[u] || u; }
+        function getSeenByArray(seenBy) { return Array.isArray(seenBy) ? seenBy : []; }
 
         // Navigation
         window.showLogin = function () { document.getElementById('register-form-container').classList.add('hidden'); document.getElementById('login-form-container').classList.remove('hidden'); };
@@ -1122,6 +1152,16 @@
 
             // On récupère QUE les alertes qui matchent avec la recherche
             const filteredArray = getFilteredData();
+
+            // Marquage comme "Vu" pour l'utilisateur actuel
+            if (currentUser && !currentUser.isOwner) {
+                filteredArray.forEach(alert => {
+                    const seenBy = getSeenByArray(alert.seenBy);
+                    if (!seenBy.some(u => u.id === currentUser.id)) {
+                        window.markAlertAsSeen(alert.id);
+                    }
+                });
+            }
 
             // Vue Vide
             if (filteredArray.length === 0) {
@@ -1172,6 +1212,23 @@
                                         <span class="text-gray-500">le ${formatDate(alert.resolvedAt)}</span>
                                     </p>` : ''}
                                     ${alert.expirationDate ? `<p class="text-sm mt-2"><span class="text-yellow-400 bg-yellow-400/10 px-2 py-0.5 rounded text-xs font-medium"><i class="fas fa-calendar-times mr-1"></i>Péremption: ${alert.expirationDate}</span></p>` : ''}
+                                    
+                                    <!-- Section Vu Par -->
+                                    <div class="mt-3 flex items-center gap-2">
+                                        <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider flex items-center gap-1">
+                                            <i class="fas fa-eye"></i> Vu par :
+                                        </span>
+                                        <div class="flex -space-x-2 overflow-hidden">
+                                            ${getSeenByArray(alert.seenBy).map(u => `
+                                                <div title="${u.firstName} ${u.lastName} (${u.role.replace('_', ' ')})" 
+                                                     class="inline-block h-6 w-6 rounded-full border border-gray-900 bg-gradient-to-br from-cyan-600 to-violet-600 flex items-center justify-center text-[8px] font-bold text-white uppercase shadow-sm cursor-help">
+                                                    ${u.firstName[0]}${u.lastName[0]}
+                                                </div>
+                                            `).join('')}
+                                            ${getSeenByArray(alert.seenBy).length === 0 ? '<span class="text-[10px] text-gray-600 italic ml-2">Personne</span>' : ''}
+                                        </div>
+                                    </div>
+
                                     ${alert.notes ? `
                                     <div class="mt-4 p-3 bg-cyan-500/10 border-l-2 border-cyan-500 rounded-r-xl">
                                         <div class="flex flex-col gap-1">
@@ -1291,6 +1348,30 @@
             }
         };
 
+        window.markAlertAsSeen = async function (id) {
+            const alert = window.alerts.find(a => a.id === id);
+            if (!alert || !currentUser) return;
+
+            const seenBy = getSeenByArray(alert.seenBy);
+            if (seenBy.some(u => u.id === currentUser.id)) return;
+
+            const newUserEntry = {
+                id: currentUser.id,
+                firstName: currentUser.firstName,
+                lastName: currentUser.lastName,
+                role: currentUser.role || 'Utilisateur',
+                date: new Date().toISOString()
+            };
+
+            try {
+                await window.updateAlertInFirestore(id, {
+                    seenBy: [...seenBy, newUserEntry]
+                });
+            } catch (error) {
+                console.error("Erreur lors du marquage comme vu:", error);
+            }
+        };
+
         window.openEditModal = function (id) {
             const alert = window.alerts.find(a => a.id === id);
             if (!alert) return;
@@ -1302,7 +1383,7 @@
             document.getElementById('edit-notes').value = alert.notes || '';
 
             // Set types
-            ['missing','outofstock','expired','damaged','other'].forEach(t => {
+            ['missing', 'outofstock', 'expired', 'damaged', 'other'].forEach(t => {
                 const el = document.getElementById('edit-type-' + t);
                 if (el) el.checked = getTypesArray(alert.type).includes(t);
             });
@@ -1370,6 +1451,7 @@
                 email: formData.get('email'),
                 password: formData.get('password'),
                 role: formData.get('role'),
+                status: 'pending',
                 createdAt: new Date().toISOString()
             };
 
@@ -1377,13 +1459,13 @@
                 await window.addUserToFirestore(newUser);
                 currentUser = newUser;
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
-                showToast('Compte créé avec succès !');
+                showToast('Demande d\'inscription envoyée ! En attente d\'approbation par le propriétaire.');
                 document.getElementById('register-form-container').classList.add('hidden');
-                document.getElementById('login-page').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('user-name').textContent = currentUser.firstName + ' ' + currentUser.lastName;
-                document.getElementById('user-role').textContent = currentUser.role.replace('_', ' ');
-                if (window.loadAlerts) window.loadAlerts();
+                document.getElementById('login-page').classList.remove('hidden');
+                showLogin();
+                
+                // Notifier le propriétaire
+                addNotification('Nouvelle inscription', `${newUser.firstName} ${newUser.lastName} demande l'accès au laboratoire.`, 'user_request');
             } catch (error) {
                 showToast(error.message === "EMAIL_EXISTS" ? 'Email déjà utilisé' : 'Erreur: ' + error.message, true);
             }
@@ -1400,6 +1482,15 @@
                 const user = users.find(u => u.email === email && u.password === password);
 
                 if (user) {
+                    if (user.status === 'pending' && !user.isOwner) {
+                        showToast('Votre compte est en attente d\'approbation.', true);
+                        return;
+                    }
+                    if (user.status === 'rejected') {
+                        showToast('Votre demande d\'accès a été refusée.', true);
+                        return;
+                    }
+
                     currentUser = user;
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     showToast('Connexion réussie !');
@@ -1494,7 +1585,8 @@
                     role: currentUser.role || 'Utilisateur'
                 },
                 date: new Date().toISOString(),
-                notes: formData.get('notes') || ''
+                notes: formData.get('notes') || '',
+                seenBy: []
             };
 
             try {
@@ -1581,7 +1673,10 @@
             if (!currentUser?.isOwner) { showToast('Accès réservé au propriétaire', true); return; }
             document.getElementById('admin-panel').classList.remove('hidden');
             const users = await window.getAllUsers();
-            renderTeamList(users);
+            const confirmedUsers = users.filter(u => u.status !== 'pending' || u.isOwner);
+            const pendingUsers = users.filter(u => u.status === 'pending' && !u.isOwner);
+            renderTeamList(confirmedUsers);
+            renderPendingList(pendingUsers);
         };
 
         window.closeAdminPanel = function () {
@@ -1608,6 +1703,55 @@
             `).join('');
         }
 
+        function renderPendingList(users) {
+            const container = document.getElementById('pending-list');
+            document.getElementById('pending-count').textContent = users.length;
+
+            if (users.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 py-4 text-sm">Aucune demande en attente</p>';
+                return;
+            }
+
+            container.innerHTML = users.map(user => `
+                <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-amber-500/20">
+                    <div>
+                        <p class="font-medium">${user.firstName} ${user.lastName}</p>
+                        <p class="text-sm text-gray-400">${user.role ? user.role.replace('_', ' ') : 'Utilisateur'} <span class="mx-1">•</span> ${user.email}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="rejectUser('${user.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg text-xs transition-colors">
+                            <i class="fas fa-times mr-1"></i>Refuser
+                        </button>
+                        <button onclick="approveUser('${user.id}')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-lg text-xs transition-colors">
+                            <i class="fas fa-check mr-1"></i>Approuver
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.approveUser = async function (userId) {
+            try {
+                await window.updateUserInFirestore(userId, { status: 'approved' });
+                showToast('Utilisateur approuvé');
+                window.showAdminPanel(); // Refresh
+                addNotification('Accès accordé', `La demande de l'utilisateur ${userId} a été approuvée par le propriétaire.`, 'system');
+            } catch (error) {
+                showToast('Erreur: ' + error.message, true);
+            }
+        };
+
+        window.rejectUser = async function (userId) {
+            if (!confirm('Voulez-vous vraiment refuser et supprimer cette demande ?')) return;
+            try {
+                await window.deleteUserFromFirestore(userId);
+                showToast('Demande refusée et supprimée');
+                window.showAdminPanel(); // Refresh
+            } catch (error) {
+                showToast('Erreur: ' + error.message, true);
+            }
+        };
+
         window.inviteUser = async function (e) {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -1622,6 +1766,7 @@
                 email: email,
                 password: tempPassword,
                 role: formData.get('role'),
+                status: 'approved', // Invitations by owner are pre-approved
                 createdAt: new Date().toISOString()
             };
 
