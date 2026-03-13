@@ -354,9 +354,9 @@
                                     <p class="text-sm font-medium" id="user-name"></p>
                                     <p class="text-xs text-cyan-400" id="user-role"></p>
                                 </div>
-                                <div
-                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                                    <i class="fas fa-user text-white"></i>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center overflow-hidden">
+                                    <img id="nav-profile-pic" src="" class="w-full h-full object-cover hidden">
+                                    <i id="nav-profile-icon" class="fas fa-user text-white"></i>
                                 </div>
                                 <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
                             </button>
@@ -465,8 +465,13 @@
                             class="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-cyan-500 text-sm placeholder-gray-500">
                     </div>
 
-                    <!-- EXPORT & TYPE FILTERS -->
-                    <div class="flex gap-2">
+                    <!-- EXPORT & SORT & TYPE FILTERS -->
+                    <div class="flex flex-wrap gap-2">
+                        <select id="sort-order" onchange="window.renderFilteredAlerts()" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500">
+                            <option value="desc">Plus récents</option>
+                            <option value="asc">Plus anciens</option>
+                        </select>
+
                         <button onclick="exportToExcel()"
                             class="bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-2.5 text-sm whitespace-nowrap transition-colors">
                             <i class="fas fa-file-excel text-emerald-400 mr-2"></i>Exporter Excel
@@ -531,10 +536,14 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Photo/Carte -->
                 <div class="glass-card p-6 text-center border-2 border-amber-500/30">
-                    <div
-                        class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-4">
-                        <i class="fas fa-user text-4xl text-white"></i>
+                    <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-4 overflow-hidden relative cursor-pointer group" onclick="document.getElementById('profile-pic-upload').click()">
+                        <img id="profile-picture-preview" src="" class="w-full h-full object-cover hidden">
+                        <i id="profile-picture-icon" class="fas fa-user text-4xl text-white"></i>
+                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="fas fa-camera text-white text-xl"></i>
+                        </div>
                     </div>
+                    <input type="file" id="profile-pic-upload" accept="image/*" class="hidden" onchange="uploadProfilePicture(event)">
                     <h2 class="text-xl font-bold" id="profile-name"></h2>
                     <p class="text-amber-400 text-sm" id="profile-role"></p>
                     <p class="text-xs creator-badge mt-4">CREATED BY SOHAIB CHEKRI</p>
@@ -652,7 +661,8 @@
 
                     <!-- Liste demandes en attente -->
                     <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-6">
-                        <h3 class="text-lg font-semibold mb-4 text-amber-400">Demandes d'inscription (<span id="pending-count">0</span>)</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-amber-400">Demandes d'inscription (<span
+                                id="pending-count">0</span>)</h3>
                         <div id="pending-list" class="space-y-2"></div>
                     </div>
                 </div>
@@ -743,6 +753,24 @@
 
                     <textarea name="notes" placeholder="Description..." rows="3"
                         class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 resize-none"></textarea>
+
+                    <div>
+                        <label class="block text-sm mb-1 text-gray-400">Ajouter une photo (Optionnel)</label>
+                        <div class="flex gap-2">
+                            <label class="flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
+                                <i class="fas fa-camera text-2xl mb-2 text-cyan-400"></i>
+                                <span class="text-xs text-center text-gray-400">Prendre/Choisir<br>une photo</span>
+                                <input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewAlertPhoto(event)">
+                            </label>
+                        </div>
+                        <div id="alert-photo-preview-container" class="hidden mt-2 relative">
+                            <img id="alert-photo-preview" class="w-full max-h-48 object-cover rounded-xl border border-white/10" src="" />
+                            <button type="button" onclick="clearAlertPhoto()" class="absolute top-2 right-2 bg-red-500/80 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-500">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <input type="hidden" id="alert-photo-base64" name="photoBase64">
+                        </div>
+                    </div>
 
                     <div class="flex gap-3">
                         <button type="button" onclick="closeAlertModal()"
@@ -1112,6 +1140,54 @@
         function getUrgencyLabel(u) { const labels = { low: 'Basse', medium: 'Moyenne', high: 'Haute' }; return labels[u] || u; }
         function getSeenByArray(seenBy) { return Array.isArray(seenBy) ? seenBy : []; }
 
+        window.compressImage = function(file, maxWidth, maxHeight, quality, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    let width = img.width;
+                    let height = img.height;
+                    // Resize logic
+                    if (width > height) { if (width > maxWidth) { height = Math.round((height *= maxWidth / width)); width = maxWidth; } } 
+                    else { if (height > maxHeight) { width = Math.round((width *= maxHeight / height)); height = maxHeight; } }
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', quality));
+                }
+            };
+        };
+
+        window.updateProfileUI = function() {
+            if (currentUser && currentUser.profilePic) {
+                const previews = [document.getElementById('profile-picture-preview'), document.getElementById('nav-profile-pic')];
+                const icons = [document.getElementById('profile-picture-icon'), document.getElementById('nav-profile-icon')];
+                previews.forEach(p => { if (p) { p.src = currentUser.profilePic; p.classList.remove('hidden'); } });
+                icons.forEach(i => { if (i) i.classList.add('hidden'); });
+            }
+        };
+
+        window.previewAlertPhoto = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            window.compressImage(file, 800, 800, 0.7, function(dataUrl) {
+                document.getElementById('alert-photo-preview').src = dataUrl;
+                document.getElementById('alert-photo-base64').value = dataUrl;
+                document.getElementById('alert-photo-preview-container').classList.remove('hidden');
+            });
+        };
+
+        window.clearAlertPhoto = function() {
+            document.getElementById('alert-photo-preview').src = '';
+            document.getElementById('alert-photo-base64').value = '';
+            document.getElementById('alert-photo-preview-container').classList.add('hidden');
+        };
+
         // Navigation
         window.showLogin = function () { document.getElementById('register-form-container').classList.add('hidden'); document.getElementById('login-form-container').classList.remove('hidden'); };
         window.showRegister = function () { document.getElementById('login-form-container').classList.add('hidden'); document.getElementById('register-form-container').classList.remove('hidden'); };
@@ -1126,8 +1202,9 @@
         function getFilteredData() {
             const filterValue = document.getElementById('filter-type').value;
             const searchValue = document.getElementById('search-input').value.toLowerCase().trim();
+            const sortOrder = document.getElementById('sort-order') ? document.getElementById('sort-order').value : 'desc';
 
-            return window.alerts.filter(alert => {
+            let filtered = window.alerts.filter(alert => {
                 // 1. Check Filtre Déroulant
                 let matchType = false;
                 if (filterValue === 'all') {
@@ -1144,6 +1221,13 @@
 
                 return matchType && matchSearch;
             });
+
+            if (sortOrder === 'asc') {
+                filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } else {
+                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+            return filtered;
         }
 
         // C'est la fonction appelée par Firabse loadAlerts ET lors d'une saisie (#search-input) 
@@ -1237,6 +1321,11 @@
                                             </span>
                                             <p class="text-sm text-gray-200">${alert.notes}</p>
                                         </div>
+                                    </div>` : ''}
+
+                                    ${alert.photo ? `
+                                    <div class="mt-4">
+                                        <img src="${alert.photo}" class="w-full max-h-96 object-contain bg-black/20 rounded-xl border border-white/10" />
                                     </div>` : ''}
                                 </div>
                             </div>
@@ -1463,7 +1552,7 @@
                 document.getElementById('register-form-container').classList.add('hidden');
                 document.getElementById('login-page').classList.remove('hidden');
                 showLogin();
-                
+
                 // Notifier le propriétaire
                 addNotification('Nouvelle inscription', `${newUser.firstName} ${newUser.lastName} demande l'accès au laboratoire.`, 'user_request');
             } catch (error) {
@@ -1501,6 +1590,7 @@
                     if (user.isOwner) {
                         document.getElementById('owner-banner').classList.remove('hidden');
                     }
+                    window.updateProfileUI();
                     if (window.loadAlerts) window.loadAlerts();
                 } else {
                     showToast('Email ou mot de passe incorrect', true);
@@ -1532,6 +1622,7 @@
                 document.getElementById('user-name').textContent = owner.firstName + ' ' + owner.lastName;
                 document.getElementById('user-role').textContent = 'Propriétaire';
                 document.getElementById('owner-banner').classList.remove('hidden');
+                window.updateProfileUI();
                 if (window.loadAlerts) window.loadAlerts();
             } else {
                 showToast('Mot de passe incorrect', true);
@@ -1543,6 +1634,7 @@
         window.closeAlertModal = function () {
             document.getElementById('alert-modal').classList.add('hidden');
             document.getElementById('alert-form').reset();
+            if(window.clearAlertPhoto) window.clearAlertPhoto();
         };
 
         window.submitAlert = async function (e) {
@@ -1586,6 +1678,7 @@
                 },
                 date: new Date().toISOString(),
                 notes: formData.get('notes') || '',
+                photo: formData.get('photoBase64') || '',
                 seenBy: []
             };
 
@@ -1643,6 +1736,22 @@
             } catch (error) {
                 showToast('Erreur: ' + error.message, true);
             }
+        };
+
+        window.uploadProfilePicture = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            window.compressImage(file, 400, 400, 0.7, async function(dataUrl) {
+                try {
+                    await window.updateUserInFirestore(currentUser.id, { profilePic: dataUrl });
+                    currentUser.profilePic = dataUrl;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    window.updateProfileUI();
+                    showToast('Photo de profil mise à jour');
+                } catch (error) {
+                    showToast('Erreur: ' + error.message, true);
+                }
+            });
         };
 
         // Changer mot de passe
@@ -1868,6 +1977,8 @@
             document.getElementById('user-name').textContent = currentUser.firstName + ' ' + currentUser.lastName;
             document.getElementById('user-role').textContent = currentUser.role?.replace('_', ' ') || 'Utilisateur';
             if (currentUser.isOwner) { document.getElementById('owner-banner').classList.remove('hidden'); }
+            window.updateProfileUI();
+            
             // Charge les alertes via FB -> Appel ensuite la nouvelle fonction renderFilteredAlerts()
             if (window.loadAlerts) {
                 window.loadAlerts();
