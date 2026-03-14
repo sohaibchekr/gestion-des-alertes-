@@ -1,19 +1,19 @@
 {
   "name": "BIOCARE-BIOTECH",
   "short_name": "BIOCARE",
-  "start_url": "/",
+  "description": "Système de Gestion des Alertes - Laboratoire Microbiologie",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f172a",
+  "background_color": "#0b0f19",
   "theme_color": "#06b6d4",
-  "scope": "/",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "alerte.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "alerte.png",
       "sizes": "512x512",
       "type": "image/png"
     }
